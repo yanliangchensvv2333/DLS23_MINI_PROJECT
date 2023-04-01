@@ -95,11 +95,16 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
-# Data
+# Data Augmentation
+# add RandomRotation
+# add ColorJitter, random change the brightness, contrastness
+
 print('==> Preparing data..')
 transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4),
     transforms.RandomHorizontalFlip(),
+    # transforms.RandomRotation(degrees=(0, 180)),
+    # transforms.ColorJitter(brightness=0.5,contrast=0.5),
     transforms.ToTensor(),
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
 ])
@@ -152,6 +157,7 @@ def train(epoch):
     train_loss = 0
     correct = 0
     total = 0
+    ind = 0
     for batch_idx, (inputs, targets) in enumerate(trainloader):
         inputs, targets = inputs.to(device), targets.to(device)
         optimizer.zero_grad()
@@ -164,10 +170,10 @@ def train(epoch):
         _, predicted = outputs.max(1)
         total += targets.size(0)
         correct += predicted.eq(targets).sum().item()
-
+        ind+=1
         # progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
         #              % (train_loss/(batch_idx+1), 100.*correct/total, correct, total))
-        print(f'Train Loss: {train_loss/(batch_idx+1)} | Train Acc: {100.*correct/total}%% ({correct}/{total})')
+    print(f'Train Loss: {train_loss/(ind+1)}% | Train Acc: {100.*correct/total}% ({correct}/{total})')
 
 
 def test(epoch):
@@ -176,6 +182,7 @@ def test(epoch):
     test_loss = 0
     correct = 0
     total = 0
+    ind = 0
     print('Start testing....')
     with torch.no_grad():
         for batch_idx, (inputs, targets) in enumerate(testloader):
@@ -187,10 +194,10 @@ def test(epoch):
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
-
+            ind+=1
             # progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
             #              % (test_loss/(batch_idx+1), 100.*correct/total, correct, total))
-            print(f' Test Loss: {test_loss/(batch_idx+1)} |  Test Acc: {100.*correct/total}%% ({correct}/{total})')
+        print(f' Test Loss: {test_loss/(ind+1)} |  Test Acc: {100.*correct/total}%% ({correct}/{total})')
 
     # Save checkpoint.
     acc = 100.*correct/total
@@ -207,7 +214,7 @@ def test(epoch):
         best_acc = acc
 
 
-for epoch in range(start_epoch, start_epoch+100):
+for epoch in range(start_epoch, start_epoch+15):
     train(epoch)
     test(epoch)
     scheduler.step()
