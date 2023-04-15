@@ -1,5 +1,7 @@
 # DLS23_MINI_PROJECT
-This is the NYU deep learning course mini-project for using ResNet Architecture to detect the CIFAR-10 set
+This is the NYU deep learning course mini-project for using ResNet Architecture to detect the CIFAR-10 set.
+
+The code is in the file **Mini_Project_Final_version-2.ipynb**.
 
 ### Names:
 
