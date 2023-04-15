@@ -14,3 +14,7 @@ This project aims to train a ResNet model that can obtain high performance of ov
 ### Results:
 
 Our final model achieved a test accuracy of 92% after 50 training epochs and had 4,918,602 trainable parameters.
+
+Train Loss|Test Loss|Train Acc.(%)|Test Acc.(%) 
+--------|---------|---------|---------
+0.24391|0.24993|91.54|92.04
